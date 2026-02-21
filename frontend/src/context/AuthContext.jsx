@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('token'));
+  const [wishlist, setWishlist] = useState([]);
 
   useEffect(() => {
     if (token) {
@@ -29,6 +30,9 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await authAPI.getMe();
       setUser(response.data.data);
+
+      const wishlistRes = await authAPI.getWishlist();
+      setWishlist(wishlistRes.data.data);
     } catch (error) {
       localStorage.removeItem('token');
       setToken(null);
@@ -74,15 +78,48 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
+    setWishlist([]);
     toast.success('Logged out successfully');
+  };
+
+  const addToWishlist = async (productId) => {
+    try {
+      if (!user) return toast.error('Please login to wishlist products');
+      await authAPI.addToWishlist(productId);
+      const res = await authAPI.getWishlist();
+      setWishlist(res.data.data);
+      toast.success('Added to wishlist');
+      return true;
+    } catch (err) {
+      const message = err.response?.data?.message || 'Failed to add to wishlist';
+      toast.error(message);
+      return false;
+    }
+  };
+
+  const removeFromWishlist = async (productId) => {
+    try {
+      await authAPI.removeFromWishlist(productId);
+      const res = await authAPI.getWishlist();
+      setWishlist(res.data.data);
+      toast.success('Removed from wishlist');
+      return true;
+    } catch (err) {
+      const message = err.response?.data?.message || 'Failed to remove from wishlist';
+      toast.error(message);
+      return false;
+    }
   };
 
   const value = {
     user,
     loading,
+    wishlist,
     register,
     login,
     logout,
+    addToWishlist,
+    removeFromWishlist,
     isAuthenticated: !!user,
   };
 

@@ -29,6 +29,9 @@ export const authAPI = {
   register: (userData) => api.post('/auth/register', userData),
   login: (credentials) => api.post('/auth/login', credentials),
   getMe: () => api.get('/auth/me'),
+  getWishlist: () => api.get('/auth/wishlist'),
+  addToWishlist: (productId) => api.post(`/auth/wishlist/${productId}`),
+  removeFromWishlist: (productId) => api.delete(`/auth/wishlist/${productId}`),
 };
 
 // Products API

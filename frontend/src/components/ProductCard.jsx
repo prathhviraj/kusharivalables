@@ -1,14 +1,28 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
+  const { wishlist, addToWishlist, removeFromWishlist } = useAuth();
+
+  const isWishlisted = wishlist?.some(item => item._id === product._id || item === product._id) || false;
 
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
     addToCart(product, 'M', 1);
+  };
+
+  const handleWishlistToggle = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isWishlisted) {
+      await removeFromWishlist(product._id);
+    } else {
+      await addToWishlist(product._id);
+    }
   };
 
   return (
@@ -40,6 +54,22 @@ const ProductCard = ({ product }) => {
               whileTap={{ scale: 0.95 }}
             >
               Quick Add
+            </motion.button>
+
+            {/* Wishlist Button */}
+            <motion.button
+              onClick={handleWishlistToggle}
+              className="absolute top-3 right-3 p-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-white dark:hover:bg-gray-800"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <svg
+                className={`w-5 h-5 ${isWishlisted ? 'text-primary-pink fill-primary-pink' : 'text-gray-600 dark:text-gray-300 fill-none'}`}
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
             </motion.button>
           </div>
 

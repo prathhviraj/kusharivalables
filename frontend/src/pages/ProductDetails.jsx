@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { productsAPI } from '../services/api';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import Loader from '../components/Loader';
 import toast from 'react-hot-toast';
 
@@ -10,6 +11,8 @@ const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { wishlist, addToWishlist, removeFromWishlist } = useAuth();
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState('M');
@@ -43,6 +46,16 @@ const ProductDetails = () => {
       return;
     }
     addToCart(product, selectedSize, quantity);
+  };
+
+  const isWishlisted = product && (wishlist?.some(item => item._id === product._id || item === product._id) || false);
+
+  const handleWishlistToggle = async () => {
+    if (isWishlisted) {
+      await removeFromWishlist(product._id);
+    } else {
+      await addToWishlist(product._id);
+    }
   };
 
   if (loading) return <Loader />;
@@ -89,8 +102,8 @@ const ProductDetails = () => {
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     className={`aspect-square rounded-lg overflow-hidden border-2 ${selectedImage === index
-                        ? 'border-primary-pink'
-                        : 'border-transparent'
+                      ? 'border-primary-pink'
+                      : 'border-transparent'
                       }`}
                   >
                     <img
@@ -114,9 +127,23 @@ const ProductDetails = () => {
               <p className="text-primary-pink font-semibold mb-2">
                 {product.category}
               </p>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                {product.title}
-              </h1>
+              <div className="flex items-center justify-between mb-4">
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+                  {product.title}
+                </h1>
+                <button
+                  onClick={handleWishlistToggle}
+                  className="p-3 bg-white dark:bg-gray-800 rounded-full shadow-sm hover:shadow-md transition-all border border-gray-100 dark:border-gray-700"
+                >
+                  <svg
+                    className={`w-6 h-6 ${isWishlisted ? 'text-primary-pink fill-primary-pink' : 'text-gray-400 dark:text-gray-500 fill-none'}`}
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
               <div className="flex items-center gap-4 mb-6">
                 <span className="text-3xl font-bold text-primary-pink">
                   ₹{product.price}
@@ -158,8 +185,8 @@ const ProductDetails = () => {
                     key={size}
                     onClick={() => setSelectedSize(size)}
                     className={`w-12 h-12 rounded-lg border-2 font-semibold transition-all ${selectedSize === size
-                        ? 'border-primary-pink bg-primary-pink text-white'
-                        : 'border-gray-300 dark:border-gray-700 hover:border-primary-pink'
+                      ? 'border-primary-pink bg-primary-pink text-white'
+                      : 'border-gray-300 dark:border-gray-700 hover:border-primary-pink'
                       }`}
                   >
                     {size}

@@ -146,3 +146,76 @@ exports.getAllUsers = async (req, res) => {
     });
   }
 };
+
+// @desc    Add product to wishlist
+// @route   POST /api/auth/wishlist/:productId
+// @access  Private
+exports.addToWishlist = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    // Check if already in wishlist
+    if (user.wishlist.includes(req.params.productId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Product already in wishlist',
+      });
+    }
+
+    user.wishlist.push(req.params.productId);
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Product added to wishlist',
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// @desc    Remove product from wishlist
+// @route   DELETE /api/auth/wishlist/:productId
+// @access  Private
+exports.removeFromWishlist = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    user.wishlist = user.wishlist.filter(
+      (id) => id.toString() !== req.params.productId
+    );
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Product removed from wishlist',
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// @desc    Get user wishlist
+// @route   GET /api/auth/wishlist
+// @access  Private
+exports.getWishlist = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate('wishlist');
+
+    res.json({
+      success: true,
+      data: user.wishlist,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
