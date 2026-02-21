@@ -1,57 +1,76 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const categories = ['Dresses', 'Tops', 'Co-ords', 'Ethnic', 'Casual', 'Party'];
 const availableSizes = ['S', 'M', 'L', 'XL'];
 
 const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
+  const [localFilters, setLocalFilters] = useState(filters);
   const [priceRange, setPriceRange] = useState({
     min: filters.minPrice || '',
     max: filters.maxPrice || '',
   });
 
+  useEffect(() => {
+    setLocalFilters(filters);
+    setPriceRange({
+      min: filters.minPrice || '',
+      max: filters.maxPrice || '',
+    });
+  }, [filters]);
+
   const handleCategoryChange = (category) => {
-    onFilterChange({
-      ...filters,
-      category: filters.category === category ? '' : category,
+    setLocalFilters({
+      ...localFilters,
+      category: localFilters.category === category ? '' : category,
     });
   };
 
   const handleSizeChange = (size) => {
-    let currentSizes = filters.size ? filters.size.split(',') : [];
+    let currentSizes = localFilters.size ? localFilters.size.split(',') : [];
     if (currentSizes.includes(size)) {
       currentSizes = currentSizes.filter((s) => s !== size);
     } else {
       currentSizes.push(size);
     }
 
-    onFilterChange({
-      ...filters,
+    setLocalFilters({
+      ...localFilters,
       size: currentSizes.length > 0 ? currentSizes.join(',') : '',
     });
   };
 
   const handlePriceChange = (type, value) => {
+    if (value !== '' && Number(value) < 0) return;
+
     const newRange = {
       ...priceRange,
       [type]: value,
     };
     setPriceRange(newRange);
-    onFilterChange({
-      ...filters,
+    setLocalFilters({
+      ...localFilters,
       minPrice: newRange.min || undefined,
       maxPrice: newRange.max || undefined,
     });
   };
 
+  const applyFilters = () => {
+    onFilterChange(localFilters);
+    if (onClose) onClose();
+  };
+
   const clearFilters = () => {
     setPriceRange({ min: '', max: '' });
-    onFilterChange({
+    const clearedFilters = {
       category: '',
       minPrice: undefined,
       maxPrice: undefined,
       size: '',
-    });
+    };
+    setLocalFilters(clearedFilters);
+    onFilterChange(clearedFilters);
+    if (onClose) onClose();
   };
 
   return (
@@ -107,7 +126,7 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
                     >
                       <input
                         type="checkbox"
-                        checked={filters.category === category}
+                        checked={localFilters.category === category}
                         onChange={() => handleCategoryChange(category)}
                         className="w-4 h-4 text-primary-pink rounded focus:ring-primary-pink"
                       />
@@ -126,14 +145,14 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {availableSizes.map((size) => {
-                    const isSelected = filters.size && filters.size.split(',').includes(size);
+                    const isSelected = localFilters.size && localFilters.size.split(',').includes(size);
                     return (
                       <button
                         key={size}
                         onClick={() => handleSizeChange(size)}
                         className={`w-10 h-10 rounded-lg border-2 flex items-center justify-center font-medium transition-colors ${isSelected
-                            ? 'border-primary-pink bg-pink-50 text-primary-pink dark:bg-pink-900/30'
-                            : 'border-gray-200 text-gray-600 hover:border-primary-pink dark:border-gray-700 dark:text-gray-400'
+                          ? 'border-primary-pink bg-pink-50 text-primary-pink dark:bg-pink-900/30'
+                          : 'border-gray-200 text-gray-600 hover:border-primary-pink dark:border-gray-700 dark:text-gray-400'
                           }`}
                       >
                         {size}
@@ -155,10 +174,12 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
                     </label>
                     <input
                       type="number"
+                      min="0"
                       value={priceRange.min}
                       onChange={(e) =>
                         handlePriceChange('min', e.target.value)
                       }
+                      onKeyDown={(e) => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()}
                       placeholder="0"
                       className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-pink dark:bg-gray-800 dark:text-white"
                     />
@@ -169,10 +190,12 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
                     </label>
                     <input
                       type="number"
+                      min="0"
                       value={priceRange.max}
                       onChange={(e) =>
                         handlePriceChange('max', e.target.value)
                       }
+                      onKeyDown={(e) => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()}
                       placeholder="1000"
                       className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-pink dark:bg-gray-800 dark:text-white"
                     />
@@ -180,13 +203,21 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
                 </div>
               </div>
 
-              {/* Clear Filters */}
-              <button
-                onClick={clearFilters}
-                className="w-full py-2 px-4 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-              >
-                Clear All Filters
-              </button>
+              {/* Apply/Clear Filters */}
+              <div className="space-y-3">
+                <button
+                  onClick={applyFilters}
+                  className="w-full py-3 px-4 bg-primary-pink text-white rounded-lg hover:bg-pink-400 font-medium shadow-md transition-colors"
+                >
+                  Apply Filters
+                </button>
+                <button
+                  onClick={clearFilters}
+                  className="w-full py-2 px-4 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                >
+                  Clear All Filters
+                </button>
+              </div>
             </div>
           </motion.aside>
         </>

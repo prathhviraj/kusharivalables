@@ -58,11 +58,15 @@ const Shop = () => {
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
-    setSearchParams({ ...newFilters, page: 1 });
+    const params = { ...newFilters, page: 1 };
+    Object.keys(params).forEach((key) => !params[key] && delete params[key]);
+    setSearchParams(params);
   };
 
   const handlePageChange = (newPage) => {
-    setSearchParams({ ...filters, page: newPage });
+    const params = { ...filters, page: newPage };
+    Object.keys(params).forEach((key) => !params[key] && delete params[key]);
+    setSearchParams(params);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -146,8 +150,8 @@ const Shop = () => {
                         key={i + 1}
                         onClick={() => handlePageChange(i + 1)}
                         className={`px-4 py-2 rounded-lg ${pagination.page === i + 1
-                            ? 'bg-primary-pink text-white'
-                            : 'border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800'
+                          ? 'bg-primary-pink text-white'
+                          : 'border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800'
                           }`}
                       >
                         {i + 1}
