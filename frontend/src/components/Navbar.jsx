@@ -127,7 +127,13 @@ const Navbar = () => {
                       Admin Panel
                     </Link>
                   )}
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                  <span className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 font-medium">
+                    <div className="w-8 h-8 rounded-full bg-pink-50 dark:bg-gray-800 flex items-center justify-center text-primary-pink border border-pink-100 dark:border-gray-700">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                      </svg>
+                    </div>
                     {user?.name}
                   </span>
                   <button
@@ -215,7 +221,11 @@ const Navbar = () => {
                         Admin Panel
                       </Link>
                     )}
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                    <span className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 font-medium pb-1">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-pink">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                      </svg>
                       {user?.name}
                     </span>
                     <button
