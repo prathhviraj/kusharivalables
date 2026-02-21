@@ -10,6 +10,8 @@ const AdminDashboard = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('add-product');
     const [users, setUsers] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [editingProduct, setEditingProduct] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -28,6 +30,8 @@ const AdminDashboard = () => {
     useEffect(() => {
         if (activeTab === 'users' && user?.role === 'admin') {
             fetchUsers();
+        } else if (activeTab === 'manage-products' && user?.role === 'admin') {
+            fetchProducts();
         }
     }, [activeTab, user]);
 
@@ -41,6 +45,47 @@ const AdminDashboard = () => {
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const fetchProducts = async () => {
+        try {
+            setIsLoading(true);
+            const { data } = await api.get('/products', { params: { limit: 100 } });
+            setProducts(data.data);
+        } catch (err) {
+            toast.error('Failed to fetch products');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleDeleteProduct = async (id) => {
+        if (window.confirm('Are you sure you want to delete this product?')) {
+            try {
+                setIsLoading(true);
+                await api.delete(`/products/${id}`);
+                toast.success('Product deleted successfully');
+                fetchProducts();
+            } catch (err) {
+                toast.error('Failed to delete product');
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    };
+
+    const handleEditClick = (product) => {
+        setProductData({
+            title: product.title,
+            description: product.description,
+            price: product.price,
+            category: product.category,
+            sizes: product.sizes,
+            stock: product.stock,
+        });
+        setEditingProduct(product._id);
+        setActiveTab('add-product');
+        window.scrollTo(0, 0);
     };
 
     const [productData, setProductData] = useState({
@@ -65,7 +110,7 @@ const AdminDashboard = () => {
 
     const handleCreateProduct = async (e) => {
         e.preventDefault();
-        if (!imageFile) {
+        if (!imageFile && !editingProduct) {
             return toast.error('Please select an image for the product');
         }
         if (productData.sizes.length === 0) {
@@ -74,29 +119,34 @@ const AdminDashboard = () => {
         try {
             setIsLoading(true);
 
-            // Upload the image
-            const formData = new FormData();
-            formData.append('image', imageFile);
+            let fullImageUrl = null;
 
-            const { data: uploadData } = await api.post('/upload', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
+            if (imageFile) {
+                const formData = new FormData();
+                formData.append('image', imageFile);
 
-            // We prepend api base URL or host. In a real app we might store absolute URL.
-            // Since `uploadData.url` comes as `/uploads/...`, we'll store it as is, or we can resolve it.
-            // If the backend runs on port 5000 and we serve it, we should prefix with the backend URL.
-            // E.g 'http://localhost:5000' + uploadData.url. Let's dynamically get it form env or standard port.
-            const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000';
-            const fullImageUrl = `${baseUrl}${uploadData.url}`;
+                const { data: uploadData } = await api.post('/upload', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
 
-            // Create the product
-            const productPayload = {
-                ...productData,
-                images: [fullImageUrl],
-            };
+                const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000';
+                fullImageUrl = `${baseUrl}${uploadData.url}`;
+            }
 
-            await api.post('/products', productPayload);
-            toast.success('Product created successfully');
+            // Create or update the product
+            const productPayload = { ...productData };
+            if (fullImageUrl) {
+                productPayload.images = [fullImageUrl];
+            }
+
+            if (editingProduct) {
+                await api.put(`/products/${editingProduct}`, productPayload);
+                toast.success('Product updated successfully');
+                setEditingProduct(null);
+            } else {
+                await api.post('/products', productPayload);
+                toast.success('Product created successfully');
+            }
 
             setProductData({
                 title: '',
@@ -133,19 +183,35 @@ const AdminDashboard = () => {
                         </h2>
                         <nav className="flex flex-col gap-2">
                             <button
-                                onClick={() => setActiveTab('add-product')}
+                                onClick={() => {
+                                    setActiveTab('add-product');
+                                    if (editingProduct) {
+                                        setEditingProduct(null);
+                                        setProductData({ title: '', description: '', price: '', category: 'Dresses', sizes: ['S', 'M', 'L'], stock: '' });
+                                        setImageFile(null);
+                                    }
+                                }}
                                 className={`py-3 px-4 rounded-xl text-left transition-colors ${activeTab === 'add-product'
-                                        ? 'bg-primary-pink text-white font-medium'
-                                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                    ? 'bg-primary-pink text-white font-medium'
+                                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                                     }`}
                             >
-                                📝 Add New Product
+                                {editingProduct ? '📝 Edit Product' : '📝 Add New Product'}
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('manage-products')}
+                                className={`py-3 px-4 rounded-xl text-left transition-colors ${activeTab === 'manage-products'
+                                    ? 'bg-primary-pink text-white font-medium'
+                                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                    }`}
+                            >
+                                📦 Manage Products
                             </button>
                             <button
                                 onClick={() => setActiveTab('users')}
                                 className={`py-3 px-4 rounded-xl text-left transition-colors ${activeTab === 'users'
-                                        ? 'bg-primary-pink text-white font-medium'
-                                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                    ? 'bg-primary-pink text-white font-medium'
+                                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                                     }`}
                             >
                                 👥 Users Activity
@@ -166,7 +232,7 @@ const AdminDashboard = () => {
                                 transition={{ duration: 0.3 }}
                             >
                                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                                    Create a New Product
+                                    {editingProduct ? 'Edit Product' : 'Create a New Product'}
                                 </h3>
                                 <form onSubmit={handleCreateProduct} className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -278,7 +344,7 @@ const AdminDashboard = () => {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Product Image (Required)
+                                            Product Image {editingProduct ? '(Optional - leave blank to keep current image)' : '(Required)'}
                                         </label>
                                         <div className="flex items-center justify-center w-full">
                                             <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-xl cursor-pointer border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
@@ -356,8 +422,8 @@ const AdminDashboard = () => {
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap">
                                                             <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${u.role === 'admin'
-                                                                    ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300 border border-purple-200 dark:border-purple-800'
-                                                                    : 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border border-green-200 dark:border-green-800'
+                                                                ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300 border border-purple-200 dark:border-purple-800'
+                                                                : 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border border-green-200 dark:border-green-800'
                                                                 }`}>
                                                                 {u.role.toUpperCase()}
                                                             </span>
@@ -377,6 +443,88 @@ const AdminDashboard = () => {
                                                         <td colSpan="3" className="px-6 py-12 text-center text-gray-500 flex flex-col items-center justify-center">
                                                             <svg className="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                                                             <span>No users have joined yet.</span>
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+                            </motion.div>
+                        )}
+
+                        {/* Manage Products */}
+                        {activeTab === 'manage-products' && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <div className="flex justify-between items-center mb-6">
+                                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+                                        Manage Products
+                                    </h3>
+                                    <button onClick={fetchProducts} className="text-primary-pink hover:text-pink-600 font-medium text-sm flex items-center gap-1 bg-pink-50 dark:bg-pink-900/20 px-3 py-1.5 rounded-lg transition-colors">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                                        Refresh List
+                                    </button>
+                                </div>
+
+                                {isLoading ? (
+                                    <div className="flex justify-center py-12">
+                                        <span className="w-8 h-8 border-4 border-primary-pink border-t-transparent rounded-full animate-spin"></span>
+                                    </div>
+                                ) : (
+                                    <div className="overflow-x-auto rounded-xl border border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+                                        <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+                                            <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-600">
+                                                <tr>
+                                                    <th className="px-6 py-4 font-semibold tracking-wider">Product</th>
+                                                    <th className="px-6 py-4 font-semibold tracking-wider">Price/Stock</th>
+                                                    <th className="px-6 py-4 font-semibold tracking-wider">Category</th>
+                                                    <th className="px-6 py-4 font-semibold tracking-wider text-right">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+                                                {products.map((p) => (
+                                                    <tr key={p._id} className="bg-white dark:bg-gray-800 hover:bg-pink-50/50 dark:hover:bg-gray-700/50 transition-colors">
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <div className="flex flex-col">
+                                                                <span className="font-medium text-gray-900 dark:text-white text-base truncate max-w-[200px]">{p.title}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <div className="flex flex-col">
+                                                                <span className="text-gray-900 dark:text-white font-medium">₹{p.price}</span>
+                                                                <span className="text-xs text-gray-500">{p.stock} in stock</span>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                                                                {p.category}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                            <button
+                                                                onClick={() => handleEditClick(p)}
+                                                                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-4 transition-colors"
+                                                            >
+                                                                Edit
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDeleteProduct(p._id)}
+                                                                className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors"
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                                {products.length === 0 && (
+                                                    <tr>
+                                                        <td colSpan="4" className="px-6 py-12 text-center text-gray-500 flex flex-col items-center justify-center">
+                                                            <svg className="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                                                            <span>No products found.</span>
                                                         </td>
                                                     </tr>
                                                 )}

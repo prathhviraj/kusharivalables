@@ -38,6 +38,9 @@ export const productsAPI = {
   getByCategory: (category, params) =>
     api.get(`/products/category/${category}`, { params }),
   search: (query) => api.get('/products/search', { params: { q: query } }),
+  create: (productData) => api.post('/products', productData),
+  update: (id, productData) => api.put(`/products/${id}`, productData),
+  delete: (id) => api.delete(`/products/${id}`),
 };
 
 export default api;
