@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { productsAPI } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import Loader from '../components/Loader';
+import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const fetchFeatured = async () => {
@@ -141,27 +143,29 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto text-center bg-gradient-to-r from-primary-pink to-pink-400 rounded-3xl p-12 text-white"
-        >
-          <h2 className="text-4xl font-bold mb-4">
-            Join the Kusharivalables Family
-          </h2>
-          <p className="text-xl mb-8 opacity-90">
-            Get exclusive offers and updates on new arrivals
-          </p>
-          <Link
-            to="/register"
-            className="inline-block px-8 py-4 bg-white text-primary-pink rounded-full hover:bg-gray-100 transition-colors font-semibold"
+      {!isAuthenticated && (
+        <section className="py-20 px-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto text-center bg-gradient-to-r from-primary-pink to-pink-400 rounded-3xl p-12 text-white"
           >
-            Sign Up Now
-          </Link>
-        </motion.div>
-      </section>
+            <h2 className="text-4xl font-bold mb-4">
+              Join the Kusharivalables Family
+            </h2>
+            <p className="text-xl mb-8 opacity-90">
+              Get exclusive offers and updates on new arrivals
+            </p>
+            <Link
+              to="/register"
+              className="inline-block px-8 py-4 bg-white text-primary-pink rounded-full hover:bg-gray-100 transition-colors font-semibold"
+            >
+              Sign Up Now
+            </Link>
+          </motion.div>
+        </section>
+      )}
     </div>
   );
 };
