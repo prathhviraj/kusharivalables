@@ -101,6 +101,7 @@ const Navbar = () => {
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
+                  className="text-gray-900 dark:text-white"
                 >
                   <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
                 </svg>
@@ -165,6 +166,7 @@ const Navbar = () => {
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
+                  className="text-gray-900 dark:text-white"
                 >
                   {isMenuOpen ? (
                     <path d="M18 6L6 18M6 6l12 12" />
