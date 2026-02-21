@@ -88,11 +88,10 @@ const ProductDetails = () => {
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`aspect-square rounded-lg overflow-hidden border-2 ${
-                      selectedImage === index
+                    className={`aspect-square rounded-lg overflow-hidden border-2 ${selectedImage === index
                         ? 'border-primary-pink'
                         : 'border-transparent'
-                    }`}
+                      }`}
                   >
                     <img
                       src={image}
@@ -120,7 +119,7 @@ const ProductDetails = () => {
               </h1>
               <div className="flex items-center gap-4 mb-6">
                 <span className="text-3xl font-bold text-primary-pink">
-                  ${product.price}
+                  ₹{product.price}
                 </span>
                 {product.rating > 0 && (
                   <div className="flex items-center gap-1">
@@ -158,11 +157,10 @@ const ProductDetails = () => {
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`w-12 h-12 rounded-lg border-2 font-semibold transition-all ${
-                      selectedSize === size
+                    className={`w-12 h-12 rounded-lg border-2 font-semibold transition-all ${selectedSize === size
                         ? 'border-primary-pink bg-primary-pink text-white'
                         : 'border-gray-300 dark:border-gray-700 hover:border-primary-pink'
-                    }`}
+                      }`}
                   >
                     {size}
                   </button>

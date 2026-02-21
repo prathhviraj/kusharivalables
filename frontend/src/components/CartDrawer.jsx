@@ -133,7 +133,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
                           </div>
                           <div className="text-right">
                             <p className="font-semibold text-gray-900 dark:text-white">
-                              ${(item.price * item.quantity).toFixed(2)}
+                              ₹{(item.price * item.quantity).toFixed(2)}
                             </p>
                             <button
                               onClick={() =>
@@ -158,7 +158,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
                 <div className="flex justify-between text-lg font-semibold">
                   <span className="text-gray-900 dark:text-white">Total:</span>
                   <span className="text-primary-pink">
-                    ${getCartTotal().toFixed(2)}
+                    ₹{getCartTotal().toFixed(2)}
                   </span>
                 </div>
                 <Link

@@ -31,7 +31,7 @@ const ProductCard = ({ product }) => {
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            
+
             {/* Quick Add Button */}
             <motion.button
               onClick={handleAddToCart}
@@ -53,7 +53,7 @@ const ProductCard = ({ product }) => {
             </h3>
             <div className="flex items-center justify-between">
               <span className="text-xl font-bold text-primary-pink">
-                ${product.price}
+                ₹{product.price}
               </span>
               {product.rating > 0 && (
                 <div className="flex items-center gap-1">

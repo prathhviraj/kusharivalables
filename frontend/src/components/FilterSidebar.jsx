@@ -111,7 +111,7 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">
-                      Min Price ($)
+                      Min Price (₹)
                     </label>
                     <input
                       type="number"
@@ -125,7 +125,7 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
                   </div>
                   <div>
                     <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">
-                      Max Price ($)
+                      Max Price (₹)
                     </label>
                     <input
                       type="number"

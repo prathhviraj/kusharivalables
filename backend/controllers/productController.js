@@ -60,6 +60,37 @@ exports.getProducts = async (req, res) => {
   }
 };
 
+// @desc    Create a product
+// @route   POST /api/products
+// @access  Private/Admin
+exports.createProduct = async (req, res) => {
+  try {
+    const { title, description, price, category, images, sizes, stock } = req.body;
+
+    const product = new Product({
+      title,
+      description,
+      price: Number(price),
+      category,
+      images,
+      sizes,
+      stock: Number(stock),
+    });
+
+    const createdProduct = await product.save();
+
+    res.status(201).json({
+      success: true,
+      data: createdProduct,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 // @desc    Get single product
 // @route   GET /api/products/:id
 // @access  Public

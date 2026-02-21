@@ -60,7 +60,7 @@ const Navbar = () => {
             {/* Right Side Actions */}
             <div className="flex items-center gap-4">
               <DarkModeToggle />
-              
+
               {/* Cart Icon */}
               <button
                 onClick={() => setIsCartOpen(true)}
@@ -90,6 +90,14 @@ const Navbar = () => {
               {/* Auth Buttons */}
               {isAuthenticated ? (
                 <div className="hidden md:flex items-center gap-4">
+                  {user?.role === 'admin' && (
+                    <Link
+                      to="/admin"
+                      className="px-4 py-2 text-sm font-medium text-primary-pink bg-pink-50 dark:bg-pink-900/30 rounded-full hover:bg-pink-100 dark:hover:bg-pink-900/50 transition-colors"
+                    >
+                      Admin Panel
+                    </Link>
+                  )}
                   <span className="text-sm text-gray-600 dark:text-gray-400">
                     {user?.name}
                   </span>
@@ -168,6 +176,15 @@ const Navbar = () => {
                 </div>
                 {isAuthenticated ? (
                   <>
+                    {user?.role === 'admin' && (
+                      <Link
+                        to="/admin"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="text-primary-pink font-medium"
+                      >
+                        Admin Panel
+                      </Link>
+                    )}
                     <span className="text-sm text-gray-600 dark:text-gray-400">
                       {user?.name}
                     </span>

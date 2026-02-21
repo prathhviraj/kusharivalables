@@ -85,7 +85,7 @@ const Cart = () => {
                       </h3>
                     </Link>
                     <p className="text-gray-600 dark:text-gray-400 mb-4">
-                      Size: {item.size} | ${item.price} each
+                      Size: {item.size} | ₹{item.price} each
                     </p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -111,7 +111,7 @@ const Cart = () => {
                       </div>
                       <div className="text-right">
                         <p className="text-xl font-bold text-gray-900 dark:text-white">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ₹{(item.price * item.quantity).toFixed(2)}
                         </p>
                         <button
                           onClick={() => removeFromCart(item._id, item.size)}
@@ -140,7 +140,7 @@ const Cart = () => {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-gray-600 dark:text-gray-400">
                   <span>Subtotal</span>
-                  <span>${getCartTotal().toFixed(2)}</span>
+                  <span>₹{getCartTotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600 dark:text-gray-400">
                   <span>Shipping</span>
@@ -150,7 +150,7 @@ const Cart = () => {
                   <div className="flex justify-between text-xl font-bold text-gray-900 dark:text-white">
                     <span>Total</span>
                     <span className="text-primary-pink">
-                      ${getCartTotal().toFixed(2)}
+                      ₹{getCartTotal().toFixed(2)}
                     </span>
                   </div>
                 </div>

@@ -5,9 +5,11 @@ const {
   getProductById,
   getProductsByCategory,
   searchProducts,
+  createProduct,
 } = require('../controllers/productController');
+const { protect, admin } = require('../middleware/authMiddleware');
 
-router.get('/', getProducts);
+router.route('/').get(getProducts).post(protect, admin, createProduct);
 router.get('/search', searchProducts);
 router.get('/category/:category', getProductsByCategory);
 router.get('/:id', getProductById);
