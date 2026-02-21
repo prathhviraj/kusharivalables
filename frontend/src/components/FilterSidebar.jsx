@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const categories = ['Dresses', 'Tops', 'Co-ords', 'Ethnic', 'Casual', 'Party'];
+const availableSizes = ['S', 'M', 'L', 'XL'];
 
 const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
   const [priceRange, setPriceRange] = useState({
@@ -13,6 +14,20 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
     onFilterChange({
       ...filters,
       category: filters.category === category ? '' : category,
+    });
+  };
+
+  const handleSizeChange = (size) => {
+    let currentSizes = filters.size ? filters.size.split(',') : [];
+    if (currentSizes.includes(size)) {
+      currentSizes = currentSizes.filter((s) => s !== size);
+    } else {
+      currentSizes.push(size);
+    }
+
+    onFilterChange({
+      ...filters,
+      size: currentSizes.length > 0 ? currentSizes.join(',') : '',
     });
   };
 
@@ -35,6 +50,7 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
       category: '',
       minPrice: undefined,
       maxPrice: undefined,
+      size: '',
     });
   };
 
@@ -54,7 +70,7 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed left-0 top-0 h-full w-80 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto lg:static lg:shadow-none lg:z-auto"
+            className="fixed left-0 top-0 h-full w-80 lg:w-full bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto lg:static lg:shadow-none lg:z-auto lg:transform-none"
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-6 lg:hidden">
@@ -100,6 +116,30 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
                       </span>
                     </label>
                   ))}
+                </div>
+              </div>
+
+              {/* Sizes */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Sizes
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {availableSizes.map((size) => {
+                    const isSelected = filters.size && filters.size.split(',').includes(size);
+                    return (
+                      <button
+                        key={size}
+                        onClick={() => handleSizeChange(size)}
+                        className={`w-10 h-10 rounded-lg border-2 flex items-center justify-center font-medium transition-colors ${isSelected
+                            ? 'border-primary-pink bg-pink-50 text-primary-pink dark:bg-pink-900/30'
+                            : 'border-gray-200 text-gray-600 hover:border-primary-pink dark:border-gray-700 dark:text-gray-400'
+                          }`}
+                      >
+                        {size}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

@@ -16,6 +16,7 @@ const Shop = () => {
     search: searchParams.get('search') || '',
     minPrice: searchParams.get('minPrice') || '',
     maxPrice: searchParams.get('maxPrice') || '',
+    size: searchParams.get('size') || '',
   });
   const [pagination, setPagination] = useState({
     page: 1,
@@ -144,11 +145,10 @@ const Shop = () => {
                       <button
                         key={i + 1}
                         onClick={() => handlePageChange(i + 1)}
-                        className={`px-4 py-2 rounded-lg ${
-                          pagination.page === i + 1
+                        className={`px-4 py-2 rounded-lg ${pagination.page === i + 1
                             ? 'bg-primary-pink text-white'
                             : 'border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800'
-                        }`}
+                          }`}
                       >
                         {i + 1}
                       </button>

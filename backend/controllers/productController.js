@@ -10,6 +10,7 @@ exports.getProducts = async (req, res) => {
       search,
       minPrice,
       maxPrice,
+      size,
       page = 1,
       limit = 12,
     } = req.query;
@@ -26,6 +27,10 @@ exports.getProducts = async (req, res) => {
         { title: { $regex: search, $options: 'i' } },
         { description: { $regex: search, $options: 'i' } },
       ];
+    }
+
+    if (size) {
+      query.sizes = { $in: size.split(',') };
     }
 
     if (minPrice || maxPrice) {
