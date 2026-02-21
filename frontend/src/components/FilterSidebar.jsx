@@ -1,0 +1,158 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const categories = ['Dresses', 'Tops', 'Co-ords', 'Ethnic', 'Casual', 'Party'];
+
+const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
+  const [priceRange, setPriceRange] = useState({
+    min: filters.minPrice || '',
+    max: filters.maxPrice || '',
+  });
+
+  const handleCategoryChange = (category) => {
+    onFilterChange({
+      ...filters,
+      category: filters.category === category ? '' : category,
+    });
+  };
+
+  const handlePriceChange = (type, value) => {
+    const newRange = {
+      ...priceRange,
+      [type]: value,
+    };
+    setPriceRange(newRange);
+    onFilterChange({
+      ...filters,
+      minPrice: newRange.min || undefined,
+      maxPrice: newRange.max || undefined,
+    });
+  };
+
+  const clearFilters = () => {
+    setPriceRange({ min: '', max: '' });
+    onFilterChange({
+      category: '',
+      minPrice: undefined,
+      maxPrice: undefined,
+    });
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          />
+          <motion.aside
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed left-0 top-0 h-full w-80 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto lg:static lg:shadow-none lg:z-auto"
+          >
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6 lg:hidden">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                  Filters
+                </h2>
+                <button
+                  onClick={onClose}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Categories */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Categories
+                </h3>
+                <div className="space-y-2">
+                  {categories.map((category) => (
+                    <label
+                      key={category}
+                      className="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={filters.category === category}
+                        onChange={() => handleCategoryChange(category)}
+                        className="w-4 h-4 text-primary-pink rounded focus:ring-primary-pink"
+                      />
+                      <span className="text-gray-700 dark:text-gray-300">
+                        {category}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price Range */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Price Range
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      Min Price ($)
+                    </label>
+                    <input
+                      type="number"
+                      value={priceRange.min}
+                      onChange={(e) =>
+                        handlePriceChange('min', e.target.value)
+                      }
+                      placeholder="0"
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-pink dark:bg-gray-800 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      Max Price ($)
+                    </label>
+                    <input
+                      type="number"
+                      value={priceRange.max}
+                      onChange={(e) =>
+                        handlePriceChange('max', e.target.value)
+                      }
+                      placeholder="1000"
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-pink dark:bg-gray-800 dark:text-white"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Clear Filters */}
+              <button
+                onClick={clearFilters}
+                className="w-full py-2 px-4 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                Clear All Filters
+              </button>
+            </div>
+          </motion.aside>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
+export default FilterSidebar;
