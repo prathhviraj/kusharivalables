@@ -33,6 +33,7 @@ export const authAPI = {
   resetPassword: (token, password) =>
     api.put(`/auth/resetpassword/${token}`, { password }),
   getMe: () => api.get('/auth/me'),
+  updateProfile: (userData) => api.put('/auth/profile', userData),
   getWishlist: () => api.get('/auth/wishlist'),
   addToWishlist: (productId) => api.post(`/auth/wishlist/${productId}`),
   removeFromWishlist: (productId) => api.delete(`/auth/wishlist/${productId}`),

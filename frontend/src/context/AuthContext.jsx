@@ -118,6 +118,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateProfile = async (userData) => {
+    try {
+      const response = await authAPI.updateProfile(userData);
+      setUser(response.data.data);
+      toast.success('Profile updated successfully!');
+      return { success: true };
+    } catch (error) {
+       const message = error.response?.data?.message || 'Update failed';
+       toast.error(message);
+       return { success: false, error: message };
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
@@ -167,6 +180,7 @@ export const AuthProvider = ({ children }) => {
     forgotPassword,
     resetPassword,
     logout,
+    updateProfile,
     addToWishlist,
     removeFromWishlist,
     isAuthenticated: !!user,

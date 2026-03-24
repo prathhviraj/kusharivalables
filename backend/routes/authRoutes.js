@@ -20,6 +20,7 @@ const {
   addToWishlist,
   removeFromWishlist,
   getWishlist,
+  updateProfile,
 } = require('../controllers/authController');
 const { protect, admin } = require('../middleware/authMiddleware');
 
@@ -29,6 +30,7 @@ router.post('/google', googleLogin);
 router.post('/forgotpassword', forgotPassword);
 router.put('/resetpassword/:resettoken', resetPassword);
 router.get('/me', protect, getMe);
+router.put('/profile', protect, updateProfile);
 router.get('/users', protect, admin, getAllUsers);
 
 // Wishlist

@@ -15,6 +15,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import Wishlist from './pages/Wishlist';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
                   path="/resetpassword/:resettoken"
                   element={<ResetPassword />}
                 />
+                <Route path="/profile" element={<Profile />} />
               </Routes>
             </main>
             <Footer />

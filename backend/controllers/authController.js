@@ -375,3 +375,48 @@ exports.getWishlist = async (req, res) => {
     });
   }
 };
+
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
+exports.updateProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+      user.name = req.body.name || user.name;
+      user.email = req.body.email || user.email;
+      
+      if (req.body.phone !== undefined) {
+        user.phone = req.body.phone;
+      }
+      if (req.body.address !== undefined) {
+        user.address = req.body.address;
+      }
+
+      const updatedUser = await user.save();
+
+      res.json({
+        success: true,
+        data: {
+          _id: updatedUser._id,
+          name: updatedUser.name,
+          email: updatedUser.email,
+          phone: updatedUser.phone,
+          address: updatedUser.address,
+          role: updatedUser.role,
+        },
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

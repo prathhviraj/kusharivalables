@@ -50,6 +50,16 @@ const userSchema = new mongoose.Schema(
       unique: true,
       sparse: true,
     },
+    phone: {
+      type: String,
+    },
+    address: {
+      street: String,
+      city: String,
+      state: String,
+      zipCode: String,
+      country: String,
+    },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
   },

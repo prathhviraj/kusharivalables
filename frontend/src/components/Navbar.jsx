@@ -131,7 +131,7 @@ const Navbar = () => {
                       Admin Panel
                     </Link>
                   )}
-                  <span className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 font-medium">
+                  <Link to="/profile" className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 font-medium hover:text-primary-pink transition-colors">
                     <div className="w-8 h-8 rounded-full bg-pink-50 dark:bg-gray-800 flex items-center justify-center text-primary-pink border border-pink-100 dark:border-gray-700">
                       <svg
                         width="16"
@@ -148,7 +148,7 @@ const Navbar = () => {
                       </svg>
                     </div>
                     {user?.name}
-                  </span>
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-primary-pink transition-colors"
@@ -234,7 +234,7 @@ const Navbar = () => {
                         Admin Panel
                       </Link>
                     )}
-                    <span className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 font-medium pb-1">
+                    <Link to="/profile" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 font-medium pb-1 hover:text-primary-pink transition-colors">
                       <svg
                         width="16"
                         height="16"
@@ -250,7 +250,7 @@ const Navbar = () => {
                         <circle cx="12" cy="7" r="4"></circle>
                       </svg>
                       {user?.name}
-                    </span>
+                    </Link>
                     <button
                       onClick={() => {
                         handleLogout();
