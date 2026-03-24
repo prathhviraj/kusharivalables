@@ -4,13 +4,8 @@ import { useCart } from '../context/CartContext';
 import toast from 'react-hot-toast';
 
 const Cart = () => {
-  const {
-    cartItems,
-    removeFromCart,
-    updateQuantity,
-    getCartTotal,
-    clearCart,
-  } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, getCartTotal, clearCart } =
+    useCart();
 
   const handleCheckout = () => {
     toast.success('Checkout functionality coming soon!');
@@ -91,7 +86,11 @@ const Cart = () => {
                       <div className="flex items-center gap-3">
                         <button
                           onClick={() =>
-                            updateQuantity(item._id, item.size, item.quantity - 1)
+                            updateQuantity(
+                              item._id,
+                              item.size,
+                              item.quantity - 1
+                            )
                           }
                           className="w-10 h-10 rounded-lg border border-gray-300 dark:border-gray-700 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
@@ -102,7 +101,11 @@ const Cart = () => {
                         </span>
                         <button
                           onClick={() =>
-                            updateQuantity(item._id, item.size, item.quantity + 1)
+                            updateQuantity(
+                              item._id,
+                              item.size,
+                              item.quantity + 1
+                            )
                           }
                           className="w-10 h-10 rounded-lg border border-gray-300 dark:border-gray-700 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700"
                         >

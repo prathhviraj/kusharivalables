@@ -145,15 +145,18 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {availableSizes.map((size) => {
-                    const isSelected = localFilters.size && localFilters.size.split(',').includes(size);
+                    const isSelected =
+                      localFilters.size &&
+                      localFilters.size.split(',').includes(size);
                     return (
                       <button
                         key={size}
                         onClick={() => handleSizeChange(size)}
-                        className={`w-10 h-10 rounded-lg border-2 flex items-center justify-center font-medium transition-colors ${isSelected
-                          ? 'border-primary-pink bg-pink-50 text-primary-pink dark:bg-pink-900/30'
-                          : 'border-gray-200 text-gray-600 hover:border-primary-pink dark:border-gray-700 dark:text-gray-400'
-                          }`}
+                        className={`w-10 h-10 rounded-lg border-2 flex items-center justify-center font-medium transition-colors ${
+                          isSelected
+                            ? 'border-primary-pink bg-pink-50 text-primary-pink dark:bg-pink-900/30'
+                            : 'border-gray-200 text-gray-600 hover:border-primary-pink dark:border-gray-700 dark:text-gray-400'
+                        }`}
                       >
                         {size}
                       </button>
@@ -176,10 +179,11 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
                       type="number"
                       min="0"
                       value={priceRange.min}
-                      onChange={(e) =>
-                        handlePriceChange('min', e.target.value)
+                      onChange={(e) => handlePriceChange('min', e.target.value)}
+                      onKeyDown={(e) =>
+                        ['e', 'E', '+', '-'].includes(e.key) &&
+                        e.preventDefault()
                       }
-                      onKeyDown={(e) => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()}
                       placeholder="0"
                       className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-pink dark:bg-gray-800 dark:text-white"
                     />
@@ -192,10 +196,11 @@ const FilterSidebar = ({ filters, onFilterChange, onClose, isOpen }) => {
                       type="number"
                       min="0"
                       value={priceRange.max}
-                      onChange={(e) =>
-                        handlePriceChange('max', e.target.value)
+                      onChange={(e) => handlePriceChange('max', e.target.value)}
+                      onKeyDown={(e) =>
+                        ['e', 'E', '+', '-'].includes(e.key) &&
+                        e.preventDefault()
                       }
-                      onKeyDown={(e) => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()}
                       placeholder="1000"
                       className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-pink dark:bg-gray-800 dark:text-white"
                     />

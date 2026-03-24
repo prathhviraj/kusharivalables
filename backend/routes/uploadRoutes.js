@@ -39,7 +39,9 @@ const upload = multer({
 router.post('/', protect, admin, upload.single('image'), (req, res) => {
   // Normalize the path for windows/mac
   if (!req.file) {
-      return res.status(400).json({ success: false, message: 'No file uploaded' });
+    return res
+      .status(400)
+      .json({ success: false, message: 'No file uploaded' });
   }
   const normalizedPath = req.file.path.replace(/\\/g, '/');
   res.json({ success: true, url: `/${normalizedPath}` });

@@ -48,7 +48,12 @@ const ProductDetails = () => {
     addToCart(product, selectedSize, quantity);
   };
 
-  const isWishlisted = product && (wishlist?.some(item => item._id === product._id || item === product._id) || false);
+  const isWishlisted =
+    product &&
+    (wishlist?.some(
+      (item) => item._id === product._id || item === product._id
+    ) ||
+      false);
 
   const handleWishlistToggle = async () => {
     if (isWishlisted) {
@@ -101,10 +106,11 @@ const ProductDetails = () => {
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`aspect-square rounded-lg overflow-hidden border-2 ${selectedImage === index
-                      ? 'border-primary-pink'
-                      : 'border-transparent'
-                      }`}
+                    className={`aspect-square rounded-lg overflow-hidden border-2 ${
+                      selectedImage === index
+                        ? 'border-primary-pink'
+                        : 'border-transparent'
+                    }`}
                   >
                     <img
                       src={image}
@@ -140,7 +146,12 @@ const ProductDetails = () => {
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
                   </svg>
                 </button>
               </div>
@@ -184,10 +195,11 @@ const ProductDetails = () => {
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`w-12 h-12 rounded-lg border-2 font-semibold transition-all ${selectedSize === size
-                      ? 'border-primary-pink bg-primary-pink text-white'
-                      : 'border-gray-300 dark:border-gray-700 hover:border-primary-pink'
-                      }`}
+                    className={`w-12 h-12 rounded-lg border-2 font-semibold transition-all ${
+                      selectedSize === size
+                        ? 'border-primary-pink bg-primary-pink text-white'
+                        : 'border-gray-300 dark:border-gray-700 hover:border-primary-pink'
+                    }`}
                   >
                     {size}
                   </button>

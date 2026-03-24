@@ -51,8 +51,7 @@ export const AuthProvider = ({ children }) => {
       toast.success('Registration successful!');
       return { success: true };
     } catch (error) {
-      const message =
-        error.response?.data?.message || 'Registration failed';
+      const message = error.response?.data?.message || 'Registration failed';
       toast.error(message);
       return { success: false, error: message };
     }
@@ -69,6 +68,51 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       const message = error.response?.data?.message || 'Login failed';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  const googleLogin = async (data) => {
+    try {
+      const response = await authAPI.googleLogin(data);
+      const { token: newToken, ...userInfo } = response.data.data;
+      localStorage.setItem('token', newToken);
+      setToken(newToken);
+      setUser(userInfo);
+      toast.success('Login with Google successful!');
+      return { success: true };
+    } catch (error) {
+      const message = error.response?.data?.message || 'Google Login failed';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  const forgotPassword = async (email) => {
+    try {
+      const response = await authAPI.forgotPassword(email);
+      toast.success(response.data.data || 'Password reset email sent');
+      return { success: true };
+    } catch (error) {
+      const message =
+        error.response?.data?.message || 'Failed to send rest email';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  const resetPassword = async (tokenParam, password) => {
+    try {
+      const response = await authAPI.resetPassword(tokenParam, password);
+      const { token: newToken, ...userInfo } = response.data.data;
+      localStorage.setItem('token', newToken);
+      setToken(newToken);
+      setUser(userInfo);
+      toast.success('Password reset successfully!');
+      return { success: true };
+    } catch (error) {
+      const message = error.response?.data?.message || 'Password reset failed';
       toast.error(message);
       return { success: false, error: message };
     }
@@ -91,7 +135,8 @@ export const AuthProvider = ({ children }) => {
       toast.success('Added to wishlist');
       return true;
     } catch (err) {
-      const message = err.response?.data?.message || 'Failed to add to wishlist';
+      const message =
+        err.response?.data?.message || 'Failed to add to wishlist';
       toast.error(message);
       return false;
     }
@@ -105,7 +150,8 @@ export const AuthProvider = ({ children }) => {
       toast.success('Removed from wishlist');
       return true;
     } catch (err) {
-      const message = err.response?.data?.message || 'Failed to remove from wishlist';
+      const message =
+        err.response?.data?.message || 'Failed to remove from wishlist';
       toast.error(message);
       return false;
     }
@@ -117,6 +163,9 @@ export const AuthProvider = ({ children }) => {
     wishlist,
     register,
     login,
+    googleLogin,
+    forgotPassword,
+    resetPassword,
     logout,
     addToWishlist,
     removeFromWishlist,

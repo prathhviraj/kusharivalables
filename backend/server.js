@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Main application entry point for the Kusharivalables Backend API.
+ * This file configures the Express server, connects to the MongoDB database,
+ * and sets up all necessary middleware and route handlers.
+ * 
+ * @author Kusharivalables Development Team
+ * @copyright Copyright (c) 2026 Kusharivalables. All rights reserved.
+ * @version 1.0.0
+ * 
+ * @module Server
+ */
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');

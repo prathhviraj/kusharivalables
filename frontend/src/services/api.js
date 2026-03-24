@@ -28,6 +28,10 @@ api.interceptors.request.use(
 export const authAPI = {
   register: (userData) => api.post('/auth/register', userData),
   login: (credentials) => api.post('/auth/login', credentials),
+  googleLogin: (data) => api.post('/auth/google', data),
+  forgotPassword: (email) => api.post('/auth/forgotpassword', { email }),
+  resetPassword: (token, password) =>
+    api.put(`/auth/resetpassword/${token}`, { password }),
   getMe: () => api.get('/auth/me'),
   getWishlist: () => api.get('/auth/wishlist'),
   addToWishlist: (productId) => api.post(`/auth/wishlist/${productId}`),

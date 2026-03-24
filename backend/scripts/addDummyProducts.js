@@ -8,7 +8,8 @@ dotenv.config();
 const dummyProducts = [
   {
     title: 'Elegant Floral Summer Dress',
-    description: 'Beautiful floral print summer dress perfect for any occasion. Made with premium cotton fabric for maximum comfort.',
+    description:
+      'Beautiful floral print summer dress perfect for any occasion. Made with premium cotton fabric for maximum comfort.',
     price: 89.99,
     category: 'Dresses',
     images: [
@@ -21,7 +22,8 @@ const dummyProducts = [
   },
   {
     title: 'Classic White Blouse',
-    description: 'Timeless white blouse that pairs perfectly with any bottom. Versatile and elegant design.',
+    description:
+      'Timeless white blouse that pairs perfectly with any bottom. Versatile and elegant design.',
     price: 49.99,
     category: 'Tops',
     images: [
@@ -34,7 +36,8 @@ const dummyProducts = [
   },
   {
     title: 'Casual Denim Co-ord Set',
-    description: 'Stylish co-ord set featuring a denim top and matching shorts. Perfect for a casual day out.',
+    description:
+      'Stylish co-ord set featuring a denim top and matching shorts. Perfect for a casual day out.',
     price: 79.99,
     category: 'Co-ords',
     images: [
@@ -47,7 +50,8 @@ const dummyProducts = [
   },
   {
     title: 'Traditional Embroidered Kurta',
-    description: 'Beautiful traditional kurta with intricate embroidery work. Perfect for festivals and special occasions.',
+    description:
+      'Beautiful traditional kurta with intricate embroidery work. Perfect for festivals and special occasions.',
     price: 129.99,
     category: 'Ethnic',
     images: [
@@ -60,7 +64,8 @@ const dummyProducts = [
   },
   {
     title: 'Comfortable Cotton T-Shirt',
-    description: 'Soft and comfortable cotton t-shirt perfect for everyday wear. Available in multiple colors.',
+    description:
+      'Soft and comfortable cotton t-shirt perfect for everyday wear. Available in multiple colors.',
     price: 29.99,
     category: 'Casual',
     images: [
@@ -73,7 +78,8 @@ const dummyProducts = [
   },
   {
     title: 'Glamorous Sequin Party Dress',
-    description: 'Stunning sequin dress that will make you shine at any party. Elegant and eye-catching design.',
+    description:
+      'Stunning sequin dress that will make you shine at any party. Elegant and eye-catching design.',
     price: 149.99,
     category: 'Party',
     images: [
@@ -86,7 +92,8 @@ const dummyProducts = [
   },
   {
     title: 'Floral Maxi Dress',
-    description: 'Elegant maxi dress with beautiful floral patterns. Perfect for summer events and gatherings.',
+    description:
+      'Elegant maxi dress with beautiful floral patterns. Perfect for summer events and gatherings.',
     price: 99.99,
     category: 'Dresses',
     images: [
@@ -99,7 +106,8 @@ const dummyProducts = [
   },
   {
     title: 'Striped Crop Top',
-    description: 'Trendy striped crop top that pairs perfectly with high-waisted bottoms. Modern and stylish.',
+    description:
+      'Trendy striped crop top that pairs perfectly with high-waisted bottoms. Modern and stylish.',
     price: 39.99,
     category: 'Tops',
     images: [
@@ -112,7 +120,8 @@ const dummyProducts = [
   },
   {
     title: 'Designer Saree',
-    description: 'Elegant designer saree with beautiful patterns and premium fabric. Perfect for weddings and special events.',
+    description:
+      'Elegant designer saree with beautiful patterns and premium fabric. Perfect for weddings and special events.',
     price: 199.99,
     category: 'Ethnic',
     images: [
@@ -125,7 +134,8 @@ const dummyProducts = [
   },
   {
     title: 'Casual Jogger Set',
-    description: 'Comfortable jogger set perfect for lounging or casual outings. Soft and breathable fabric.',
+    description:
+      'Comfortable jogger set perfect for lounging or casual outings. Soft and breathable fabric.',
     price: 69.99,
     category: 'Casual',
     images: [
@@ -138,7 +148,8 @@ const dummyProducts = [
   },
   {
     title: 'Cocktail Party Dress',
-    description: 'Elegant cocktail dress perfect for evening parties and events. Sophisticated and stylish design.',
+    description:
+      'Elegant cocktail dress perfect for evening parties and events. Sophisticated and stylish design.',
     price: 119.99,
     category: 'Party',
     images: [
@@ -151,7 +162,8 @@ const dummyProducts = [
   },
   {
     title: 'Printed Co-ord Set',
-    description: 'Vibrant printed co-ord set with matching top and bottom. Perfect for a coordinated look.',
+    description:
+      'Vibrant printed co-ord set with matching top and bottom. Perfect for a coordinated look.',
     price: 89.99,
     category: 'Co-ords',
     images: [
@@ -197,10 +209,17 @@ const addDummyProducts = async () => {
     process.exit(0);
   } catch (error) {
     console.error('❌ Error:', error.message);
-    if (error.message.includes('ENOTFOUND') || error.message.includes('connection')) {
+    if (
+      error.message.includes('ENOTFOUND') ||
+      error.message.includes('connection')
+    ) {
       console.error('\n💡 MongoDB connection error!');
-      console.error('   Please check your .env file and make sure MONGODB_URI is correct.');
-      console.error('   Example: mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/kusharivalables');
+      console.error(
+        '   Please check your .env file and make sure MONGODB_URI is correct.'
+      );
+      console.error(
+        '   Example: mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/kusharivalables'
+      );
     }
     process.exit(1);
   }

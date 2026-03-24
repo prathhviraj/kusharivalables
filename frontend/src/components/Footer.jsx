@@ -14,7 +14,8 @@ const Footer = () => {
               Kusharivalables
             </h3>
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Premium girls clothing brand. Elegant, modern, and timeless fashion.
+              Premium girls clothing brand. Elegant, modern, and timeless
+              fashion.
             </p>
           </div>
 

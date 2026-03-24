@@ -26,10 +26,26 @@ const Home = () => {
   }, []);
 
   const categories = [
-    { name: 'Dresses', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400' },
-    { name: 'Tops', image: 'https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?w=400' },
-    { name: 'Co-ords', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400' },
-    { name: 'Ethnic', image: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400' },
+    {
+      name: 'Dresses',
+      image:
+        'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400',
+    },
+    {
+      name: 'Tops',
+      image:
+        'https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?w=400',
+    },
+    {
+      name: 'Co-ords',
+      image:
+        'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400',
+    },
+    {
+      name: 'Ethnic',
+      image:
+        'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400',
+    },
   ];
 
   if (loading) return <Loader />;

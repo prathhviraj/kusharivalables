@@ -13,6 +13,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
 import Wishlist from './pages/Wishlist';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   return (
@@ -32,6 +34,11 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/forgotpassword" element={<ForgotPassword />} />
+                <Route
+                  path="/resetpassword/:resettoken"
+                  element={<ResetPassword />}
+                />
               </Routes>
             </main>
             <Footer />

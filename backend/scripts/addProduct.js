@@ -13,7 +13,7 @@ const addProduct = async () => {
 
     // Get product data from command line arguments or use defaults
     const args = process.argv.slice(2);
-    
+
     if (args.length === 0) {
       console.log(`
 Usage: node addProduct.js <title> <description> <price> <category> <stock> <image1> [image2] [image3] [sizes]
@@ -28,7 +28,7 @@ Sizes: S, M, L, XL (comma-separated)
     }
 
     const [title, description, price, category, stock, ...rest] = args;
-    
+
     // Parse images (everything until sizes)
     const images = [];
     const sizes = [];
@@ -38,7 +38,7 @@ Sizes: S, M, L, XL (comma-separated)
       if (arg.includes(',') && !arg.includes('http')) {
         // This is sizes
         foundSizes = true;
-        sizes.push(...arg.split(',').map(s => s.trim()));
+        sizes.push(...arg.split(',').map((s) => s.trim()));
       } else if (!foundSizes) {
         // This is an image URL
         images.push(arg);
@@ -49,9 +49,18 @@ Sizes: S, M, L, XL (comma-separated)
     const finalSizes = sizes.length > 0 ? sizes : ['S', 'M', 'L', 'XL'];
 
     // Validate category
-    const validCategories = ['Dresses', 'Tops', 'Co-ords', 'Ethnic', 'Casual', 'Party'];
+    const validCategories = [
+      'Dresses',
+      'Tops',
+      'Co-ords',
+      'Ethnic',
+      'Casual',
+      'Party',
+    ];
     if (!validCategories.includes(category)) {
-      console.error(`Invalid category. Must be one of: ${validCategories.join(', ')}`);
+      console.error(
+        `Invalid category. Must be one of: ${validCategories.join(', ')}`
+      );
       process.exit(1);
     }
 
@@ -61,7 +70,12 @@ Sizes: S, M, L, XL (comma-separated)
       description,
       price: parseFloat(price),
       category,
-      images: images.length > 0 ? images : ['https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800'],
+      images:
+        images.length > 0
+          ? images
+          : [
+              'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800',
+            ],
       sizes: finalSizes,
       stock: parseInt(stock),
       rating: 0,

@@ -70,7 +70,8 @@ exports.getProducts = async (req, res) => {
 // @access  Private/Admin
 exports.createProduct = async (req, res) => {
   try {
-    const { title, description, price, category, images, sizes, stock } = req.body;
+    const { title, description, price, category, images, sizes, stock } =
+      req.body;
 
     const product = new Product({
       title,
@@ -194,7 +195,8 @@ exports.searchProducts = async (req, res) => {
 // @access  Private/Admin
 exports.updateProduct = async (req, res) => {
   try {
-    const { title, description, price, category, images, sizes, stock } = req.body;
+    const { title, description, price, category, images, sizes, stock } =
+      req.body;
 
     let product = await Product.findById(req.params.id);
 

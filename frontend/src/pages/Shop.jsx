@@ -38,9 +38,7 @@ const Shop = () => {
       };
 
       // Remove empty filters
-      Object.keys(params).forEach(
-        (key) => !params[key] && delete params[key]
-      );
+      Object.keys(params).forEach((key) => !params[key] && delete params[key]);
 
       const response = await productsAPI.getAll(params);
       setProducts(response.data.data);
@@ -149,10 +147,11 @@ const Shop = () => {
                       <button
                         key={i + 1}
                         onClick={() => handlePageChange(i + 1)}
-                        className={`px-4 py-2 rounded-lg ${pagination.page === i + 1
-                          ? 'bg-primary-pink text-white'
-                          : 'border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800'
-                          }`}
+                        className={`px-4 py-2 rounded-lg ${
+                          pagination.page === i + 1
+                            ? 'bg-primary-pink text-white'
+                            : 'border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800'
+                        }`}
                       >
                         {i + 1}
                       </button>

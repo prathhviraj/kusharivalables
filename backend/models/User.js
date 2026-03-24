@@ -1,5 +1,16 @@
+/**
+ * @fileoverview User Model & Schema Definition.
+ * Represents user data within the system including credentials,
+ * roles, wishlists, and authentication token lifecycle management.
+ * Includes hooks for password hashing prior to persisting.
+ * 
+ * @author Kusharivalables Development Team
+ * @copyright Copyright (c) 2026 Kusharivalables. All rights reserved.
+ * @module Models/User
+ */
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema(
   {
@@ -17,7 +28,9 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, 'Please provide a password'],
+      required: function () {
+        return !this.googleId;
+      },
       minlength: 6,
       select: false,
     },
@@ -32,6 +45,13 @@ const userSchema = new mongoose.Schema(
         ref: 'Product',
       },
     ],
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
   },
   {
     timestamps: true,
@@ -49,7 +69,25 @@ userSchema.pre('save', async function (next) {
 
 // Compare password method
 userSchema.methods.matchPassword = async function (enteredPassword) {
+  if (!this.password) return false;
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Generate and hash password token
+userSchema.methods.getResetPasswordToken = function () {
+  // Generate token
+  const resetToken = crypto.randomBytes(20).toString('hex');
+
+  // Hash token and set to resetPasswordToken field
+  this.resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  // Set expire
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+  return resetToken;
 };
 
 module.exports = mongoose.model('User', userSchema);
