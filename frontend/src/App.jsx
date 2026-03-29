@@ -16,6 +16,8 @@ import Wishlist from './pages/Wishlist';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Profile from './pages/Profile';
+import BlogList from './pages/BlogList';
+import BlogDetails from './pages/BlogDetails';
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
                   element={<ResetPassword />}
                 />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/blog" element={<BlogList />} />
+                <Route path="/blog/:id" element={<BlogDetails />} />
               </Routes>
             </main>
             <Footer />

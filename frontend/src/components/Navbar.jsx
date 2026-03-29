@@ -29,13 +29,14 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
-              <motion.div
+            <Link to="/" className="flex items-center gap-2 relative z-50">
+              <motion.img
                 whileHover={{ scale: 1.05 }}
-                className="text-2xl font-bold bg-gradient-to-r from-primary-pink to-pink-400 bg-clip-text text-transparent"
-              >
-                Kusharivalables
-              </motion.div>
+                src="/logo.png"
+                alt="Kushariva Labels Logo"
+                className="h-14 md:h-16 w-auto object-contain transition-transform mix-blend-multiply dark:invert dark:hue-rotate-180 dark:mix-blend-screen opacity-90 hover:opacity-100 dark:opacity-100"
+                style={{ imageRendering: 'high-quality' }}
+              />
             </Link>
 
             {/* Desktop Navigation */}
@@ -51,6 +52,12 @@ const Navbar = () => {
                 className="text-gray-700 dark:text-gray-300 hover:text-primary-pink transition-colors font-medium"
               >
                 Shop
+              </Link>
+              <Link
+                to="/blog"
+                className="text-gray-700 dark:text-gray-300 hover:text-primary-pink transition-colors font-medium"
+              >
+                Blog
               </Link>
               <div className="relative">
                 <SearchBar />
@@ -219,6 +226,13 @@ const Navbar = () => {
                   className="text-gray-700 dark:text-gray-300 hover:text-primary-pink"
                 >
                   Shop
+                </Link>
+                <Link
+                  to="/blog"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-gray-700 dark:text-gray-300 hover:text-primary-pink"
+                >
+                  Blog
                 </Link>
                 <div className="pt-2">
                   <SearchBar />

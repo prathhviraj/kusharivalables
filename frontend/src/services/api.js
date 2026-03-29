@@ -51,4 +51,12 @@ export const productsAPI = {
   delete: (id) => api.delete(`/products/${id}`),
 };
 
+// Blogs API
+export const blogAPI = {
+  getAll: () => api.get('/blogs'),
+  getById: (id) => api.get(`/blogs/${id}`),
+  create: (blogData) => api.post('/blogs', blogData),
+  delete: (id) => api.delete(`/blogs/${id}`),
+};
+
 export default api;

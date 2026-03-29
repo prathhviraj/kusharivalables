@@ -98,6 +98,43 @@ const AdminDashboard = () => {
   });
   const [imageFile, setImageFile] = useState(null);
 
+  // --- Blog State ---
+  const [blogData, setBlogData] = useState({ title: '', content: '' });
+  
+  const handleBlogChange = (e) => {
+    setBlogData({ ...blogData, [e.target.name]: e.target.value });
+  };
+  
+  const handleCreateBlog = async (e) => {
+    e.preventDefault();
+    if (!imageFile) return toast.error('Please select an image for the blog');
+    try {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append('image', imageFile);
+
+      const { data: uploadData } = await api.post('/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      const baseUrl = import.meta.env.VITE_API_URL
+        ? import.meta.env.VITE_API_URL.replace('/api', '')
+        : 'http://localhost:5000';
+      const fullImageUrl = `${baseUrl}${uploadData.url}`;
+
+      await api.post('/blogs', { ...blogData, image: fullImageUrl });
+      
+      toast.success('Blog published successfully!');
+      setBlogData({ title: '', content: '' });
+      setImageFile(null);
+      e.target.reset();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Error creating blog');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleInputChange = (e) => {
     setProductData({ ...productData, [e.target.name]: e.target.value });
   };
@@ -226,6 +263,19 @@ const AdminDashboard = () => {
                 }`}
               >
                 👥 Users Activity
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('write-blog');
+                  setImageFile(null);
+                }}
+                className={`py-3 px-4 rounded-xl text-left transition-colors ${
+                  activeTab === 'write-blog'
+                    ? 'bg-primary-pink text-white font-medium'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }`}
+              >
+                ✍️ Write Blog
               </button>
             </nav>
           </div>
@@ -687,6 +737,67 @@ const AdminDashboard = () => {
                     </table>
                   </div>
                 )}
+              </motion.div>
+            )}
+
+            {/* Write Blog Tab */}
+            {activeTab === 'write-blog' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                  Publish a Fashion Blog
+                </h3>
+                <form onSubmit={handleCreateBlog} className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Blog Title
+                    </label>
+                    <input
+                      type="text"
+                      name="title"
+                      required
+                      value={blogData.title}
+                      onChange={handleBlogChange}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-pink outline-none transition-all"
+                      placeholder="e.g. Summer Trends 2026"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Content / Story
+                    </label>
+                    <textarea
+                      name="content"
+                      required
+                      rows="8"
+                      value={blogData.content}
+                      onChange={handleBlogChange}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-pink outline-none transition-all resize-y"
+                      placeholder="Write your story here..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Cover Image (Required)
+                    </label>
+                    <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-xl cursor-pointer border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg className="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold text-primary-pink">Click to upload</span> or drag and drop</p>
+                        {imageFile && <p className="mt-4 px-4 py-1.5 bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300 rounded-full font-medium truncate max-w-[200px] text-sm">✓ {imageFile.name}</p>}
+                      </div>
+                      <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} required />
+                    </label>
+                  </div>
+                  <button type="submit" disabled={isLoading} className="w-full py-4 bg-gradient-to-r from-primary-pink to-pink-500 text-white rounded-xl font-bold shadow-lg shadow-pink-200 dark:shadow-none hover:shadow-xl transition-all flex justify-center items-center gap-2 text-lg">
+                    {isLoading ? <span className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></span> : 'Publish Blog'}
+                  </button>
+                </form>
               </motion.div>
             )}
           </div>

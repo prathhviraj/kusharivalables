@@ -40,6 +40,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
+app.use('/api/blogs', require('./routes/blogRoutes'));
 
 // Serve static directory correctly
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
